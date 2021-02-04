@@ -1,1 +1,112 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/favicon.ico"><title>CMP Gaming</title><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"><link href="/css/chunk-vendors.215266fe.css" rel="preload" as="style"><link href="/js/app.0c89d84e.js" rel="preload" as="script"><link href="/js/chunk-vendors.98b9dec2.js" rel="preload" as="script"><link href="/css/chunk-vendors.215266fe.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="/js/chunk-vendors.98b9dec2.js"></script><script src="/js/app.0c89d84e.js"></script></body></html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">    
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-main>
+                <v-row 
+                    justify="center"
+                    class="mt-4"
+                >
+                    <v-col cols="3">
+                        <v-select 
+                            v-model="selected_file" 
+                            @change="load()" 
+                            :items="files" 
+                            label="Select a file to load"
+                            outlined 
+                            dense
+                        />
+                    </v-col>
+                </v-row>
+
+                <v-row
+                    justify="center"
+                >
+                    <v-col cols="8">
+                        <v-data-table
+                            :headers="table_headers"
+                            :items="table_items"
+                            :search="table_search"
+                        >
+
+                        </v-data-table>
+                    </v-col>
+                </v-row>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    
+    <script src="./output/files.js"></script>
+
+    <script>
+
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+
+            /**
+             * Load filenames containing the data
+             */
+            mounted() {
+                this.origin = document.location.origin
+                this.files = files
+            },
+
+            data: {
+                origin: '',
+                // ---------------
+                //
+                // Selector props
+                //
+                // ---------------
+                selected_file: '',
+                files: [],
+
+                // ---------------
+                //
+                // Table props
+                // 
+                // ---------------
+                table_headers: [
+                    {text: 'Player',          value: 'player_name',   align: 'center'},
+                    {text: 'Kills',           value: 'kills',         align: 'center'},
+                    {text: 'Deaths',          value: 'deaths',        align: 'center'},
+                    {text: 'K/D ratio',       value: 'kdr',           align: 'center'},
+                    {text: 'Teamkills',       value: 'tks',           align: 'center'},
+                    {text: 'Prefered weapon', value: 'weapon',        align: 'center'},
+                ],
+                table_items: [],
+                table_search: '',
+            },
+
+            methods: {
+                load() {
+                    const full_path = this.origin.concat('/output/', this.selected_file, '.json')
+                    // Read the file
+                    fetch(full_path)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data)
+                            this.table_items = data
+                        })
+                },
+            }
+        })
+    </script>
+</body>
+
+</html>
