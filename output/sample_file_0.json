@@ -6,5 +6,13 @@
         "tks": 2, 
         "kdr": 10.2, 
         "weapon": "Tank"
+    },
+    {
+        "player_name": "Boldsome",
+        "kills": 32,
+        "deaths": 10,
+        "tks": 0,
+        "kdr": 2.3,
+        "weapon": "M1919"
     }
 ]
